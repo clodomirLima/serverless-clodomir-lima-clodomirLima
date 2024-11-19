@@ -1,0 +1,1 @@
+Remover este arquivo de fazer um push no repositório para confirmar que as permissões do candidato no repositório estão devidamente configuradas.
