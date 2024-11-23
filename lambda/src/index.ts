@@ -1,5 +1,5 @@
 import { type APIGatewayProxyEvent, type Context, type APIGatewayProxyResult } from 'aws-lambda'
-import { OrderRepository } from '../src/Repository/OrderRepository'
+import { OrderRepository } from './Repository/OrderRepository'
 import { AwsS3 } from './awsS3/awsS3'
 
 const orderRepository = new OrderRepository(new AwsS3(
