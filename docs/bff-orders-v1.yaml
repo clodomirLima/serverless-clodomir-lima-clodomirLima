@@ -43,6 +43,57 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - bearerAuth: []
+  /order:
+    get:
+      tags:
+        - Orders
+      summary: Dados Orders
+      parameters:
+        - in: query
+          name: order
+          schema:
+            type: string
+            default: desc
+      responses:
+        '200':
+          description: Chamada realizada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderData'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
+  /order/{id}:
+    get:
+      tags:
+        - Orders
+      summary: Dados Orders por Id
+      parameters:
+        - in: path
+          name: id
+          schema:
+             type: string
+          required: true
+          description: Id da Order
+      responses:
+        '200':
+          description: Chamada realizada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderData'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '5XX':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
 components:
   securitySchemes:
     bearerAuth:
@@ -107,3 +158,24 @@ components:
         description:
           type: string
           description: descrição aleatória
+    OrderData:
+      type: object
+      properties:
+        orderId:
+          type: string
+          description: ID
+        userId:
+          type: string
+          description: descrição userId
+        orderDate:
+          type: string
+          description: descrição userId
+        status:
+          type: string
+          description: descrição userId
+        items:
+          type: array
+          description: descrição userId
+        totalAmount:
+          type: number
+          description: descrição userId

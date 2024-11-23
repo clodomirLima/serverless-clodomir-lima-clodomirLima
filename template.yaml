@@ -113,16 +113,72 @@ Resources:
       Tags:
         "orders:application:name": !Sub '${ApplicationName}-${StackName}-${StackEnvironment}'
         "orders:application:resource": !Sub '${ApplicationName}-${StackName}-${StackEnvironment}-GeneralFunction128'
-  GeneralFunction128LogGroup:
-    Type: AWS::Logs::LogGroup
+
+  handleOrderListRestAPI:
+    Type: AWS::Serverless::Function
     Properties:
-      LogGroupName: !Sub '/aws/lambda/${GeneralFunction128}'
-      RetentionInDays: 1
+      Description: |
+        [X] Processa chamadas das APIs do recurso OrderListRestAPI
+      CodeUri: lambda/dist
+      Handler: index.handleOrderListRestAPI
+      Architectures:
+        - x86_64
+      Layers:
+        - !Ref DeveloperTestLayerV1
+      Environment:
+        Variables:
+          APPLICATION_NAME: !Ref ApplicationName
+          STACK_ENVIRONMENT: !Ref StackEnvironment
+          BUCKET_ORDER: "serverless-backend-test-dev-orders"
+          KEY: "orders.json"
+      Policies:
+        - S3ReadPolicy:
+            BucketName: "serverless-backend-test-dev-orders"
+      Events:
+         GetOrderListFunctionEvent128:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DeveloperTestApiGatewayApi
+            Path: /v1/order
+            Method: get
+            Auth:
+              Authorizer: CognitoAuthorizer
       Tags:
-        - Key: "orders:application:name"
-          Value: !Sub '${ApplicationName}-${StackName}-${StackEnvironment}'
-        - Key: "orders:application:resource"
-          Value: !Sub '${ApplicationName}-${StackName}-${StackEnvironment}-GeneralFunction128LogGroup'
+        "orders:application:name": !Sub '${ApplicationName}-${StackName}-${StackEnvironment}'
+        "orders:application:resource": !Sub '${ApplicationName}-${StackName}-${StackEnvironment}-handleOrderListRestAPI'
+
+  handleOrderByIdRestAPI:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: |
+        [X] Processa chamadas das APIs do recurso OrderByIdRestAPI
+      CodeUri: lambda/dist
+      Handler: index.handleOrderByIdRestAPI
+      Architectures:
+        - x86_64
+      Layers:
+        - !Ref DeveloperTestLayerV1
+      Environment:
+        Variables:
+          APPLICATION_NAME: !Ref ApplicationName
+          STACK_ENVIRONMENT: !Ref StackEnvironment
+          BUCKET_ORDER: "serverless-backend-test-dev-orders"
+          KEY: "orders.json"
+      Policies:
+        - S3ReadPolicy:
+            BucketName: "serverless-backend-test-dev-orders"
+      Events:
+         GetOrderByIdFunctionEvent128:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DeveloperTestApiGatewayApi
+            Path: /v1/order/{id}
+            Method: get
+            Auth:
+              Authorizer: CognitoAuthorizer
+      Tags:
+        "orders:application:name": !Sub '${ApplicationName}-${StackName}-${StackEnvironment}'
+        "orders:application:resource": !Sub '${ApplicationName}-${StackName}-${StackEnvironment}-handleOrderByIdRestAPI'
 
   #Lambda Layer
   DeveloperTestLayerV1:
